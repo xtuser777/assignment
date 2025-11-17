@@ -1,0 +1,21 @@
+{
+    "name": "informatica-pmr/assignment",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        },
+        "files": [
+            "global.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Lucas Oliveira",
+            "email": "lucaoxt@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
