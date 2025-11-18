@@ -7,8 +7,8 @@ $_SESSION['YEAR'] = '2025';
 
 require __DIR__. '/vendor/autoload.php';
 
-$resource = filter_input(INPUT_GET, 'resource') ?? 'home';
-$action = filter_input(INPUT_GET, 'action') ?? 'index';
+$resource = filter_input(INPUT_GET, 'resource');
+$action = filter_input(INPUT_GET, 'action');
 
 $title = 'Home';
 
@@ -25,6 +25,6 @@ switch ($resource) {
         break;
 }
 
-$viewPath = __DIR__ . "src/views/{$resource}/{$action}.view.php";  
+$viewPath = __DIR__ . "/src/views/{$resource}/{$action}.view.php";  
 
 include_once './src/views/layout.php';
