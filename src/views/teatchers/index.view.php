@@ -1,37 +1,14 @@
 <?php
 
-$year = $_SESSION['YEAR'];
-$id = '';
-$unit_id = 0;
-$name = '';
-$identity = '';
-$document = '';
-$dependent_children = 0;
-$birth_date = '';
-$address = '';
-$neighborhood = '';
-$city = '';
-$postal_code = '';
-$phone = '';
-$cellphone = '';
-$email = '';
-$observations = '';
-$civil_status_id = 0;
-$position_id = 0;
-$discipline_id = 0;
-$situation_id = 0; 
-$remove = '';
-$adido = '';
-$readapted = '';
-$read_room = '';
-$computing = '';
-$supplement_charge = '';
-$speciality = '';
-$tutoring = '';
-$ambiental_education = '';
-$robotics = '';
-$music = '';
 
 ?>
-
-<form action="?resource=teatchers&action=create" method="post"></form>
+<h3 class="text-center">Cadastro de Professores</h3>
+<hr>
+<form action="?resource=teatchers&action=index" method="get">
+    <div class="row">
+        <div class="col-sm-12">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome" id="nome">
+        </div>
+    </div>
+</form>
