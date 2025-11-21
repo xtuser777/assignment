@@ -12,13 +12,21 @@ foreach ($_GET as $key => $value) {
         str_ends_with($key, '_sort') === false &&
         !empty($value)
     ) {
-        $filters[$key] = $value;
+        if (str_starts_with($key, 'id') === true) {
+            $filters[$key] = intval($value);
+        } else {
+            $filters[$key] = $value;
+        }
     }
 }
-$filters['idano'] = 2025;
+$nome = array_key_exists('nome', $filters) ? $filters['nome'] : '';
+$filters['idano'] = intval($_SESSION['YEAR']);
 $orderBy = [];
 foreach ($_GET as $key => $value) {
-    if (str_ends_with($key, '_sort')) {
+    if (
+        str_ends_with($key, '_sort') &&
+        !empty($value)
+    ) {
         $column = str_replace('_sort', '', $key);
         $orderBy[$column] = $value;
     }
@@ -28,16 +36,19 @@ $teatchers = $teatchersController->findMany($filters, $orderBy);
 ?>
 <h3 class="text-center">Cadastro de Professores</h3>
 <hr>
-<form action="?resource=teatchers&action=index" method="get">
+<form action="" method="get">
+    <input type="hidden" name="resource" value="teatchers">
+    <input type="hidden" name="action" value="index">
     <div class="row">
         <div class="col-sm-12">
             <label class="form-label" for="nome">Nome:</label>
-            <input class="form-control" type="text" name="nome" id="nome">
+            <input class="form-control" type="text" name="nome" id="nome" value="<?=$nome?>">
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12 text-center mt-2">
             <button type="submit" class="btn btn-primary">Pesquisar</button>
+            <a role="button" class="btn btn-success" href="/?resource=teatchers&action=create">Novo</a>
         </div>
     </div>
 
@@ -53,19 +64,24 @@ $teatchers = $teatchersController->findMany($filters, $orderBy);
             <tr>
                 <th><select class="form-control" name="nome_sort" id="nome_sort">
                         <option value="">Ordenar por Nome</option>
-                        <option value="ASC" <?php if (isset($_GET['nome_sort']) && $_GET['nome_sort'] === 'ASC') echo 'selected'; ?>>Crescente</option>
-                        <option value="DESC" <?php if (isset($_GET['nome_sort']) && $_GET['nome_sort'] === 'DESC') echo 'selected'; ?>>Decrescente</option>
+                        <option value="ASC" <?php if (isset($_GET['nome_sort']) && $_GET['nome_sort'] === 'ASC')
+                            echo 'selected'; ?>>Crescente</option>
+                        <option value="DESC" <?php if (isset($_GET['nome_sort']) && $_GET['nome_sort'] === 'DESC')
+                            echo 'selected'; ?>>Decrescente</option>
                     </select></th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($teatchers as $teatcher): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($teatcher->name); ?></td>
-                    <td><?= $teatcher->year_id ?></td>
+                    <td><?= htmlspecialchars($teatcher->nome); ?></td>
+                    <td><?= $teatcher->idano ?></td>
                     <td>
-                        <a href="?resource=teatchers&action=edit&id=<?php echo $teatcher->id; ?>" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="?resource=teatchers&action=delete&id=<?php echo $teatcher->id; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este professor?');">Excluir</a>
+                        <a href="?resource=teatchers&action=edit&id=<?php echo $teatcher->idprofessor; ?>"
+                            class="btn btn-sm btn-warning">Editar</a>
+                        <a href="?resource=teatchers&action=delete&id=<?php echo $teatcher->idprofessor; ?>"
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Tem certeza que deseja excluir este professor?');">Excluir</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

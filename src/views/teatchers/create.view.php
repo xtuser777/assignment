@@ -1,102 +1,110 @@
 <?php
 
-$year = $_SESSION['YEAR'];
-$id = '';
-$unit_id = 0;
-$name = '';
-$identity = '';
-$document = '';
-$dependent_children = 0;
-$birth_date = '';
-$address = '';
-$neighborhood = '';
-$city = '';
-$postal_code = '';
-$phone = '';
-$cellphone = '';
-$email = '';
-$observations = '';
-$civil_status_id = 0;
-$position_id = 0;
-$discipline_id = 0;
-$situation_id = 0;
-$remove = '';
-$adido = '';
-$readapted = '';
-$read_room = '';
-$computing = '';
-$supplement_charge = '';
-$speciality = '';
-$tutoring = '';
-$ambiental_education = '';
-$robotics = '';
-$music = '';
+use App\Controllers\TeatchersController;
+
+$teatchersController = new TeatchersController();
+
+$fields = [];
+
+$fields['idano'] = intval($_SESSION['YEAR']);
+$fields['idprofessor'] = '';
+$fields['idunidade'] = filter_input(INPUT_POST, 'idunidade', FILTER_SANITIZE_NUMBER_INT);
+$fields['nome'] = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_STRING);
+$fields['rg'] = filter_input(INPUT_POST, 'rg', FILTER_SANITIZE_STRING);
+$fields['cpf'] = filter_input(INPUT_POST, 'cpf', FILTER_SANITIZE_STRING);
+$fields['filhosdependentes'] = filter_input(INPUT_POST, 'filhosdependentes', FILTER_SANITIZE_NUMBER_INT);
+$fields['nascimento'] = filter_input(INPUT_POST, 'nascimento', FILTER_SANITIZE_STRING);
+$fields['endereco'] = filter_input(INPUT_POST, 'endereco', FILTER_SANITIZE_STRING);
+$fields['bairro'] = filter_input(INPUT_POST, 'bairro', FILTER_SANITIZE_STRING);
+$fields['cidade'] = filter_input(INPUT_POST, 'cidade', FILTER_SANITIZE_STRING);
+$fields['cep'] = filter_input(INPUT_POST, 'cep', FILTER_SANITIZE_STRING);
+$fields['telefone'] = filter_input(INPUT_POST, 'telefone', FILTER_SANITIZE_STRING);
+$fields['celular'] = filter_input(INPUT_POST, 'celular', FILTER_SANITIZE_STRING);
+$fields['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
+$fields['observacoes'] = filter_input(INPUT_POST, 'observacoes', FILTER_SANITIZE_STRING);
+$fields['idestado_civil'] = filter_input(INPUT_POST, 'idestado_civil', FILTER_SANITIZE_NUMBER_INT);
+$fields['idcargo'] = filter_input(INPUT_POST, 'idcargo', FILTER_SANITIZE_NUMBER_INT);
+$fields['iddisciplina'] = filter_input(INPUT_POST, 'iddisciplina', FILTER_SANITIZE_NUMBER_INT);
+$fields['idsituacao'] = filter_input(INPUT_POST, 'idsituacao', FILTER_SANITIZE_NUMBER_INT);
+$fields['remocao'] = filter_input(INPUT_POST, 'remocao', FILTER_SANITIZE_STRING);
+$fields['adido'] = filter_input(INPUT_POST, 'adido', FILTER_SANITIZE_STRING);
+$fields['readaptado'] = filter_input(INPUT_POST, 'readaptado', FILTER_SANITIZE_STRING);
+$fields['saladeleitura'] = filter_input(INPUT_POST, 'saladeleitura', FILTER_SANITIZE_STRING);
+$fields['informatica'] = filter_input(INPUT_POST, 'informatica', FILTER_SANITIZE_STRING);
+$fields['cargasuplementar'] = filter_input(INPUT_POST, 'cargasuplementar', FILTER_SANITIZE_STRING);
+$fields['especialidade'] = filter_input(INPUT_POST, 'especialidade', FILTER_SANITIZE_STRING);
+$fields['reforco'] = filter_input(INPUT_POST, 'reforco', FILTER_SANITIZE_STRING);
+$fields['educacaoambiental'] = filter_input(INPUT_POST, 'educacaoambiental', FILTER_SANITIZE_STRING);
+$fields['robotica'] = filter_input(INPUT_POST, 'robotica', FILTER_SANITIZE_STRING);
+$fields['musica'] = filter_input(INPUT_POST, 'musica', FILTER_SANITIZE_STRING);
 
 ?>
 <h3 class="text-center">Criar novo professor</h3>
 <hr>
 <form action="?resource=teatchers&action=create" method="post">
     <div class="row">
-        <div class="col-sm-2">
-            <label for="id" class="form-label">Id:</label>
-            <input type="number" class="form-control" name="id" id="id" value="<?= $id ?>">
+        <div class="col-sm-4">
+            <label for="idunidade" class="form-label">Unidade:</label>
+            <select name="idunidade" id="idunidade" class="form-control">
+                <option value="0">Selecione</option>
+            </select>
         </div>
-        <div class="col-sm-10">
-            <label for="name" class="form-label">Nome:</label>
-            <input type="text" class="form-control" name="name" id="name" value="<?= $name ?>">
+        <div class="col-sm-8">
+            <label for="nome" class="form-label">Nome:</label>
+            <input type="text" class="form-control" name="nome" id="nome" value="<?= $nome ?>">
         </div>
     </div>
     <div class="row">
         <div class="col-sm-2">
-            <label for="identity" class="form-label">RG:</label>
-            <input type="text" class="form-control" name="identity" id="identity" value="<?= $identity ?>">
+            <label for="rg" class="form-label">RG:</label>
+            <input type="text" class="form-control" name="rg" id="rg" value="<?= $rg ?>">
         </div>
         <div class="col-sm-3">
-            <label for="document" class="form-label">CPF:</label>
-            <input type="text" class="form-control" name="document" id="document" value="<?= $document ?>">
+            <label for="cpf" class="form-label">CPF:</label>
+            <input type="text" class="form-control" name="cpf" id="cpf" value="<?= $cpf ?>">
         </div>
         <div class="col-sm-2">
-            <label for="birth_date" class="form-label">Data de nascimento:</label>
-            <input type="date" class="form-control" name="birth_date" id="birth_date" value="<?= $birth_date ?>">
+            <label for="nascimento" class="form-label">Data de nascimento:</label>
+            <input type="date" class="form-control" name="nascimento" id="nascimento" value="<?= $nascimento ?>">
         </div>
         <div class="col-sm-3">
-            <label for="civil_status_id" class="form-label">Estado civil:</label>
-            <select class="form-control" name="civil_status_id" id="civil_status_id" value="<?= $civil_status_id ?>">
+            <label for="idestado_civil" class="form-label">Estado civil:</label>
+            <select class="form-control" name="idestado_civil" id="idestado_civil" value="<?= $idestado_civil ?>">
                 <option value="0">Selecione</option>
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="dependents" class="form-label">Nº Dependentes:</label>
-            <input type="number" class="form-control" name="dependents" id="dependents"
-                value="<?= $dependent_children ?>">
+            <label for="filhosdependentes" class="form-label">Nº Dependentes:</label>
+            <input type="number" class="form-control" name="filhosdependentes" id="filhosdependentes"
+                value="<?= $filhosdependentes ?>">
         </div>
     </div>
     <div class="row">
         <div class="col-sm-4">
-            <label for="address" class="form-label">Endereço:</label>
-            <input type="text" class="form-control" name="address" id="address" value="<?= $address ?>">
+            <label for="endereco" class="form-label">Endereço:</label>
+            <input type="text" class="form-control" name="endereco" id="endereco" value="<?= $endereco ?>">
         </div>
         <div class="col-sm-3">
-            <label for="neighborhood" class="form-label">Bairro:</label>
-            <input type="text" class="form-control" name="neighborhood" id="neighborhood" value="<?= $neighborhood ?>">
+            <label for="bairro" class="form-label">Bairro:</label>
+            <input type="text" class="form-control" name="bairro" id="bairro" value="<?= $bairro ?>">
         </div>
         <div class="col-sm-3">
-            <label for="city" class="form-label">Cidade:</label>
-            <input type="text" class="form-control" name="city" id="city" value="<?= $city ?>">
+            <label for="cidade" class="form-label">Cidade:</label>
+            <input type="text" class="form-control" name="cidade" id="cidade" value="<?= $cidade ?>">
         </div>
         <div class="col-sm-2">
-            <label for="postal_code" class="form-label">CEP:</label>
-            <input type="text" class="form-control" name="postal_code" id="postal_code" value="<?= $postal_code ?>">
+            <label for="cep" class="form-label">CEP:</label>
+            <input type="text" class="form-control" name="cep" id="cep" value="<?= $cep ?>">
         </div>
     </div>
     <div class="row">
         <div class="col-sm-2">
-            <label for="phone" class="form-label">Telefone:</label>
-            <input type="text" class="form-control" name="phone" id="phone" value="<?= $phone ?>">
+            <label for="telefone" class="form-label">Telefone:</label>
+            <input type="text" class="form-control" name="telefone" id="telefone" value="<?= $telefone ?>">
         </div>
         <div class="col-sm-2">
-            <label for="cellphone" class="form-label">Celular:</label>
-            <input type="text" class="form-control" name="cellphone" id="cellphone" value="<?= $cellphone ?>">
+            <label for="celular" class="form-label">Celular:</label>
+            <input type="text" class="form-control" name="celular" id="celular" value="<?= $celular ?>">
         </div>
         <div class="col-sm-8">
             <label for="email" class="form-label">E-mail:</label>
@@ -105,33 +113,33 @@ $music = '';
     </div>
     <div class="row">
         <div class="col-sm-12">
-            <label for="observations" class="form-label">Observações:</label>
-            <textarea class="form-control" name="observations" id="observations" rows="5"
-                value="<?= $observations ?>"></textarea>
+            <label for="observacoes" class="form-label">Observações:</label>
+            <textarea class="form-control" name="observacoes" id="observacoes" rows="5"
+                value="<?= $observacoes ?>"></textarea>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-3">
-            <label for="position_id" class="form-label">Cargo:</label>
-            <select class="form-control" name="position_id" id="position_id" value="<?= $position_id ?>">
+            <label for="idcargo" class="form-label">Cargo:</label>
+            <select class="form-control" name="idcargo" id="idcargo" value="<?= $idcargo ?>">
                 <option value="0">Selecione</option>
             </select>
         </div>
         <div class="col-sm-5">
-            <label for="discipline_id" class="form-label">Disciplina:</label>
-            <select class="form-control" name="discipline_id" id="discipline_id" value="<?= $discipline_id ?>">
+            <label for="iddisciplina" class="form-label">Disciplina:</label>
+            <select class="form-control" name="iddisciplina" id="iddisciplina" value="<?= $iddisciplina ?>">
                 <option value="0">Selecione</option>
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="situation_id" class="form-label">Situação:</label>
-            <select class="form-control" name="situation_id" id="situation_id" value="<?= $situation_id ?>">
+            <label for="idsituacao" class="form-label">Situação:</label>
+            <select class="form-control" name="idsituacao" id="idsituacao" value="<?= $idsituacao ?>">
                 <option value="0">Selecione</option>
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="remove" class="form-label">Remoção:</label>
-            <select class="form-control" name="remove" id="remove" value="<?= $remove ?>">
+            <label for="remocao" class="form-label">Remoção:</label>
+            <select class="form-control" name="remocao" id="remocao" value="<?= $remocao ?>">
                 <option value="N">Não</option>
                 <option value="S">Sim</option>
             </select>
@@ -146,36 +154,36 @@ $music = '';
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="readapted" class="form-label">Readaptado:</label>
-            <select class="form-control" name="readapted" id="readapted" value="<?= $readapted ?>">
+            <label for="readaptado" class="form-label">Readaptado:</label>
+            <select class="form-control" name="readaptado" id="readaptado" value="<?= $readaptado ?>">
                 <option value="N">Não</option>
                 <option value="S">Sim</option>
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="read_room" class="form-label">Sala de leitura:</label>
-            <select class="form-control" name="read_room" id="read_room" value="<?= $read_room ?>">
+            <label for="saladeleitura" class="form-label">Sala de leitura:</label>
+            <select class="form-control" name="saladeleitura" id="saladeleitura" value="<?= $saladeleitura ?>">
                 <option value="N">Não</option>
                 <option value="S">Sim</option>
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="computing" class="form-label">Sala de informática:</label>
-            <select class="form-control" name="computing" id="computing" value="<?= $computing ?>">
+            <label for="informatica" class="form-label">Sala de informática:</label>
+            <select class="form-control" name="informatica" id="informatica" value="<?= $informatica ?>">
                 <option value="N">Não</option>
                 <option value="S">Sim</option>
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="tutoring" class="form-label">Reforço:</label>
-            <select class="form-control" name="tutoring" id="tutoring" value="<?= $tutoring ?>">
+            <label for="reforco" class="form-label">Reforço:</label>
+            <select class="form-control" name="reforco" id="reforco" value="<?= $reforco ?>">
                 <option value="N">Não</option>
                 <option value="S">Sim</option>
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="ambiental_education" class="form-label">Educação ambiental:</label>
-            <select class="form-control" name="ambiental_education" id="ambiental_education" value="<?= $ambiental_education ?>">
+            <label for="educacaoambiental" class="form-label">Educação ambiental:</label>
+            <select class="form-control" name="educacaoambiental" id="educacaoambiental" value="<?= $educacaoambiental ?>">
                 <option value="N">Não</option>
                 <option value="S">Sim</option>
             </select>
@@ -183,29 +191,29 @@ $music = '';
     </div>
     <div class="row">
         <div class="col-sm-2">
-            <label for="robotics" class="form-label">Robotica:</label>
-            <select class="form-control" name="robotics" id="robotics" value="<?= $robotics ?>">
+            <label for="robotica" class="form-label">Robotica:</label>
+            <select class="form-control" name="robotica" id="robotica" value="<?= $robotica ?>">
                 <option value="N">Não</option>
                 <option value="S">Sim</option>
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="music" class="form-label">Música:</label>
-            <select class="form-control" name="music" id="music" value="<?= $music ?>">
+            <label for="musica" class="form-label">Música:</label>
+            <select class="form-control" name="musica" id="musica" value="<?= $musica ?>">
                 <option value="N">Não</option>
                 <option value="S">Sim</option>
             </select>
         </div>
         <div class="col-sm-2">
-            <label for="supplement_charge" class="form-label">Carga suplementar:</label>
-            <select class="form-control" name="supplement_charge" id="supplement_charge" value="<?= $supplement_charge ?>">
+            <label for="cargasuplementar" class="form-label">Carga suplementar:</label>
+            <select class="form-control" name="cargasuplementar" id="cargasuplementar" value="<?= $cargasuplementar ?>">
                 <option value="N">Não</option>
                 <option value="S">Sim</option>
             </select>
         </div>
         <div class="col-sm-6">
-            <label for="speciality" class="form-label">Especialidade:</label>
-            <input type="text" class="form-control" name="speciality" id="speciality" value="<?= $speciality ?>">
+            <label for="especialidade" class="form-label">Especialidade:</label>
+            <input type="text" class="form-control" name="especialidade" id="especialidade" value="<?= $especialidade ?>">
         </div>
     </div>
     <hr>

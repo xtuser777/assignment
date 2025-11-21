@@ -3,7 +3,9 @@
 session_start();
 
 $_SESSION['USERNAME'] = 'SEDUC';
-$_SESSION['YEAR'] = '2025';
+$_SESSION['YEAR'] = 2025;
+
+session_commit();
 
 require __DIR__. '/vendor/autoload.php';
 

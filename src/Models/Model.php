@@ -7,24 +7,26 @@ use App\Tools\Database;
 
 abstract class Model
 {
-    protected function createStatement($table, $columns, $values)
+    protected $table = '';
+
+    protected function createStatement($columns)
     {
         $conn = Database::getInstance()->getConnection();
-        $cols = implode(',', $columns);
-        $vals = implode(',:', $columns);
-        $sql = "INSERT INTO $table($cols) VALUES(:$vals);";
+        $keys = array_keys($columns);
+        $values = implode(',:', $keys);
+        $sql = "INSERT INTO $this->table VALUES(:$values);";
         $stmt = $conn->prepare($sql);
-        foreach (explode(',', ":$vals") as $key => $val) {
-            $stmt->bindValue($val, $values[$key]);
+        foreach ($columns as $key => $val) {
+            $stmt->bindValue(":$key", $val);
         }
 
         return $stmt;
     }
 
-    protected function selectOneStatement($table, $keys)
+    protected function selectOneStatement($keys)
     {
         $conn = Database::getInstance()->getConnection();
-        $sql = "SELECT * FROM $table";
+        $sql = "SELECT * FROM $this->table";
         if (\count($keys) > 0) {
             $where = " WHERE";
             foreach ($keys as $col => $val) {
@@ -43,10 +45,10 @@ abstract class Model
         return $stmt;
     }
 
-    protected function selectManyStatement($table, $filters, $orderBy)
+    protected function selectManyStatement($filters, $orderBy)
     {
         $conn = Database::getInstance()->getConnection();
-        $sql = "SELECT * FROM $table";
+        $sql = "SELECT * FROM $this->table";
         if (\count($filters) > 0) {
             $where = " WHERE";
             foreach ($filters as $col => $val) {
@@ -54,7 +56,7 @@ abstract class Model
                     $where .= " AND";
                 }
                 if (\is_string($val)) {
-                    $where .= " $col ILIKE %:$col%";
+                    $where .= " $col LIKE :$col";
                 } else {
                     $where .= " $col = :$col";
                 }
@@ -73,16 +75,20 @@ abstract class Model
         }
         $stmt = $conn->prepare($sql);
         foreach ($filters as $col => $val) {
-            $stmt->bindValue(":$col", $val);
+            if (\is_string($val)) {
+                $stmt->bindValue(":$col", "%$val%");
+            } else {
+                $stmt->bindValue(":$col", $val);
+            }
         }
 
         return $stmt;
     }
 
-    protected function updateStatement($table, $columns, $values, $filters)
+    protected function updateStatement($columns, $values, $filters)
     {
         $conn = Database::getInstance()->getConnection();
-        $sql = "UPDATE $table";
+        $sql = "UPDATE $this->table";
         $set = " SET";
         foreach ($columns as $key => $col) {
             if (\strlen($set) > 4) {
@@ -110,10 +116,10 @@ abstract class Model
         return $stmt;
     }
 
-    protected function deleteStatement($table, $filters)
+    protected function deleteStatement($filters)
     {
         $conn = Database::getInstance()->getConnection();
-        $sql = "DELETE FROM $table";
+        $sql = "DELETE FROM $this->table";
         $where = " WHERE";
         foreach ($filters as $col => $val) {
             if (\strlen($where) > 6) {
@@ -128,5 +134,22 @@ abstract class Model
         }
 
         return $stmt;
+    }
+
+    public function getLastInsertedId()
+    {
+        $conn = Database::getInstance()->getConnection();
+        $idano = $_SESSION['YEAR'];
+        $sql = "SELECT id$this->table FROM $this->table WHERE idano = $idano ORDER BY id$this->table DESC;";
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            return -1;
+        }
+        if ($stmt->execute() === false) {
+            return -1;
+        }
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row["id$this->table"];
     }
 }
