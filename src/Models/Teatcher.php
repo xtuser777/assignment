@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Tools\Database;
 use PDO;
 
-class Teatcher
+class Teatcher extends Model
 {
     public $id = 0;
     public $year_id = 0;
@@ -39,18 +39,8 @@ class Teatcher
     public $robotics = '';
     public $music = '';
 
-    public function findOne($id)
+    public static function fromRow($row)
     {
-        $conn = Database::getInstance()->getConnection();
-        $sql = "select * from professores where idprofessor = ?;";
-
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(1, $id);
-
-        $stmt->execute();
-
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
         $model = new Teatcher();
         $model->id = $row['idprofessor'];
         $model->year_id = $row['idano'];
@@ -62,7 +52,7 @@ class Teatcher
         $model->dependent_children = $row['filhosdependentes'];
         $model->address = $row['endereco'];
         $model->neighborhood = $row['bairro'];
-        $model->city = $row['city'];
+        $model->city = $row['cidade'];
         $model->postal_code = $row['cep'];
         $model->phone = $row['telefone'];
         $model->cellphone = $row['celular'];
@@ -87,50 +77,35 @@ class Teatcher
         return $model;
     }
 
-    public function findMany()
+    public function findOne($id)
     {
         $conn = Database::getInstance()->getConnection();
-        $sql = "select * from professor;";
+        $sql = "select * from professores where idprofessor = ?;";
+
         $stmt = $conn->prepare($sql);
-        if ($stmt->execute() === false) {
+        $stmt->bindParam(1, $id);
+
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $model = Teatcher::fromRow($row);
+
+        return $model;
+    }
+
+    public function findMany($filters, $orderBy)
+    {
+        $stmt = $this->selectManyStatement('professor', $filters, $orderBy);
+        if ($stmt === null) {
+            return [];
+        }   
+        if (!$stmt->execute()) {
             return [];
         }
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $array = [];
-        foreach ($rows as $row) {
-            $model = new Teatcher();
-            $model->id = $row['idprofessor'];
-            $model->year_id = $row['idano'];
-            $model->unit_id = $row['idunidade'];
-            $model->name = $row['nome'];
-            $model->identity = $row['rg'];
-            $model->document = $row['cpf'];
-            $model->birth_date = $row['nascimento'];
-            $model->dependent_children = $row['filhosdependentes'];
-            $model->address = $row['endereco'];
-            $model->neighborhood = $row['bairro'];
-            $model->city = $row['city'];
-            $model->postal_code = $row['cep'];
-            $model->phone = $row['telefone'];
-            $model->cellphone = $row['celular'];
-            $model->email = $row['email'];
-            $model->observations = $row['observacoes'];
-            $model->civil_status_id = $row['idestado_civil'];
-            $model->position_id = $row['idcargo'];
-            $model->discipline_id = $row['iddisciplina'];
-            $model->situation_id = $row['idsituacao'];
-            $model->remove = $row['remocao'];
-            $model->adido = $row['adido'];
-            $model->readapted = $row['readaptado'];
-            $model->read_room = $row['saladeleitura'];
-            $model->computing = $row['informatica'];
-            $model->supplement_charge = $row['cargasuplementar'];
-            $model->speciality = $row['especialidade'];
-            $model->tutoring = $row['reforco'];
-            $model->ambiental_education = $row['educacaoambiental'];
-            $model->robotics = $row['robotica'];
-            $model->music = $row['musica'];
-            $array[] = $model;
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $array[] = Teatcher::fromRow($row); 
         }
 
         return $array;

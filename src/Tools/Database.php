@@ -26,11 +26,19 @@ class Database
     {
         if ($this->connection === null) {
             $this->connection = new PDO(
-                'mysql:host=localhost;port=3306;dbname=atribui;charset=utf8', 
+                'mysql:host=127.0.0.1;port=3306;dbname=atribui;charset=utf8', 
                 'root', 
-                '.@p92m18r.');
+                '.@p92m18r.', [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                ]);
         }
 
         return $this->connection;
+    }
+
+    public function close()
+    {
+        $this->connection = null;
     }
 }
